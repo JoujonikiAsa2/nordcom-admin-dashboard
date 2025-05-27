@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
   if (!token && !isPublicRoute) {
     return NextResponse.redirect(new URL("/", request.url));
   }
-  if (isPublicRoute && token) {
+  if (isPublicRoute) {
     const redirectRoute = "/dashboard";
     return NextResponse.redirect(new URL(redirectRoute, request.url));
   }
@@ -20,5 +20,5 @@ export async function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/", "/dashboard/:path*"],
+  matcher: ["/",],
 };

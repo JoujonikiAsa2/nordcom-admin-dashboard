@@ -9,20 +9,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
-import { login } from "@/services/auth";
+// import { login } from "@/services/auth";
 import { toast } from "sonner";
-import { setUser } from "@/lib/auth/authSlice";
-import { verifyToken } from "@/utils/verifyToken";
-import { useAppDispatch } from "@/lib/hook";
+// import { setUser } from "@/lib/auth/authSlice";
+// import { verifyToken } from "@/utils/verifyToken";
+// import { useAppDispatch } from "@/lib/hook";
 
 export function LoginForm() {
-    const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: "joujoniki@gmail.com",
+    password: "111111",
   });
   const [errors, setErrors] = useState({
     email: "",
@@ -67,28 +67,12 @@ export function LoginForm() {
     if (!validateForm()) return;
 
     setIsLoading(true);
-
-    // Simulate API call
-    try {
-      const res = await login(formData);
-       console.log(res)
-      if (res?.success === true) {
-       
-        const user = verifyToken(res.data.accessToken)
-        dispatch(setUser({user, token: res.data.accessTken}))
-        toast.success(res.message);
-        setTimeout(() => {
-          // On successful login, redirect to dashboard
-          router.push("/dashboard");
-        }, 2000);
-      }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error:any) {
-      console.error(error)
-      toast.error("Failed to login");
-    } finally {
-      setIsLoading(false);
-    }
+    toast.success("Logged in successfully");
+    setIsLoading(false);
+    setTimeout(() => {
+      // On successful login, redirect to dashboard
+      router.push("/dashboard");
+    }, 2000);
   };
 
   return (
