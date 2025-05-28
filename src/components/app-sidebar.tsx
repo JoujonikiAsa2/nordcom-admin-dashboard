@@ -1,7 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { FileCode, FileText, Home, Layers, UserCircle } from "lucide-react";
+import {
+  LayoutGrid,
+  BarChart3,
+  Users,
+  ShoppingCart,
+  Package,
+  Settings,
+  FileCode,
+  FileText,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -10,22 +19,32 @@ import {
   SidebarMenu,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-// import { auth } from "@/auth";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/store";
+import NordcomLogo from "@/assets/svg/nordcomiconAdmin";
 
 const adminBar = [
   {
     title: "Dashboard",
     url: "/dashboard",
-    icon: Home,
+    icon: LayoutGrid,
+  },
+  {
+    title: "Analytics",
+    url: "/dashboard/admin/analytics",
+    icon: BarChart3,
+  },
+  {
+    title: "Orders",
+    url: "/dashboard/admin/orders",
+    icon: ShoppingCart,
   },
   {
     title: "Products",
     url: "/dashboard/admin/products",
-    icon: Layers,
+    icon: Package,
   },
   {
     title: "Categories",
@@ -40,7 +59,12 @@ const adminBar = [
   {
     title: "Users",
     url: "/dashboard/admin/users",
-    icon: UserCircle,
+    icon: Users,
+  },
+  {
+    title: "Settings",
+    url: "/dashboard/admin/settings",
+    icon: Settings,
   },
 ];
 
@@ -52,22 +76,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   console.log(data);
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
+    <Sidebar
+      collapsible="offcanvas"
+      className="bg-slate-800 border-r border-slate-700"
+      {...props}
+    >
+      <SidebarHeader className="h-20 bg-slate-800 border-b border-slate-700">
+        <SidebarMenu className="flex justify-center items-center h-full">
           <SidebarMenuItem>
-            
+            <div className="flex items-center space-x-2">
+              <NordcomLogo className="h-8 w-auto text-white" />
+            </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="bg-slate-800">
         <NavMain items={adminBar} />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="bg-slate-800 border-t border-slate-700">
         <NavUser
           user={{
-            name: (data?.name as string) || "--",
-            email: (data?.email as string) || "--",
+            name: (data?.name as string) || "Admin",
+            email: (data?.email as string) || "admin@nordcom.com",
           }}
         />
       </SidebarFooter>

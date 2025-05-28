@@ -9,13 +9,14 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <SidebarProvider>
-      <AppSidebar variant="inset" />
-      <SidebarInset>
-        <SiteHeader />
-
-        <div className="flex flex-1 flex-col p-2 lg:p-12">{children}</div>
-      </SidebarInset>
-    </SidebarProvider>
+    <div className="min-h-screen bg-gray-50">
+      <SidebarProvider>
+        <AppSidebar variant="inset" />
+        <SidebarInset>
+          <SiteHeader />
+          <div className="flex flex-1 flex-col p-6">{children}</div>
+        </SidebarInset>
+      </SidebarProvider>
+    </div>
   );
 }
