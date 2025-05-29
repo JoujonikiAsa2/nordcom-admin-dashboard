@@ -1,11 +1,26 @@
-import React from 'react';
+"use client";
+import BrandForm from "@/components/dashboard/brand/brandForm";
+import BrandTable from "@/components/dashboard/brand/brandTable";
 
-const BrandPage = () => {
-    return (
-        <div>
-            <h2 className='font-bold text-2xl text-[#101940]'>Comming soon ....................</h2>
-        </div>
-    );
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const TabsDemo = () => {
+  return (
+    <div className="flex items-start justify-center w-full h-full">
+      <Tabs defaultValue="create-brand" className="w-1/2">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="create-brand">Create Brand</TabsTrigger>
+          <TabsTrigger value="all-brands">All Brands</TabsTrigger>
+        </TabsList>
+        <TabsContent value="create-brand">
+          <BrandForm />
+        </TabsContent>
+        <TabsContent value="all-brands">
+          <BrandTable />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
 };
 
-export default BrandPage;
+export default TabsDemo;
