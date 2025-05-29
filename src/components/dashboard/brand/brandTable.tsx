@@ -133,7 +133,7 @@ const BrandTable = () => {
   const columns = getBrandColumns({ onEdit, onDelete, onView });
 
   const table = useReactTable({
-    data: mockBrands, // ✅ Fixed here
+    data: mockBrands, 
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -152,7 +152,7 @@ const BrandTable = () => {
   });
 
   return (
-    <div className="w-full">
+    <div className="w-full px-2">
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter name..."

@@ -97,7 +97,7 @@ const CategoryTable = () => {
   });
 
   return (
-    <div className="w-full">
+    <div className="w-full px-3 lg:px-6">
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter categories..."
