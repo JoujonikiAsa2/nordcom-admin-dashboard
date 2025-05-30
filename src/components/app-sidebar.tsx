@@ -10,6 +10,7 @@ import {
   Settings,
   FileCode,
   FileText,
+  Receipt,
 } from "lucide-react";
 import {
   Sidebar,
@@ -32,14 +33,14 @@ const adminBar = [
     icon: LayoutGrid,
   },
   {
-    title: "Analytics",
-    url: "/dashboard/admin/analytics",
-    icon: BarChart3,
-  },
-  {
     title: "Orders",
     url: "/dashboard/admin/orders",
     icon: ShoppingCart,
+  },
+  {
+    title: "Payment",
+    url: "/dashboard/admin/payment",
+    icon: Receipt,
   },
   {
     title: "Products",

@@ -1,17 +1,6 @@
 import React from "react";
+
 import {
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import {
-  ChevronDown,
   ArrowUpDown,
   MoreHorizontal,
   Mail,
@@ -19,6 +8,15 @@ import {
   User,
   Shield,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
 export interface User {
   id: string;
   name: string;
@@ -103,13 +101,11 @@ export const mockUsers: User[] = [
 ];
 
 export const getUserColumns = ({
-  onEdit,
-  onDelete,
-  onViewProfile,
+  onView,
+  onStatusChange,
 }: {
-  onEdit: (user: User) => void;
-  onDelete: (user: User) => void;
-  onViewProfile: (user: User) => void;
+  onView: (id: string) => void;
+  onStatusChange: (id: string, status: string) => void;
 }) => [
   {
     accessorKey: "name",
@@ -126,10 +122,12 @@ export const getUserColumns = ({
     cell: ({ row }) => (
       <div className="flex items-center space-x-3">
         {row.original.imageUrl ? (
-          <img
+          <Image
             src={row.original.imageUrl}
             alt={row.original.name}
             className="h-8 w-8 rounded-full object-cover"
+            width={32}
+            height={32}
           />
         ) : (
           <div className="h-8 w-8 rounded-full bg-orange-100 flex items-center justify-center">
@@ -181,13 +179,14 @@ export const getUserColumns = ({
       const status = row.original.status;
       const statusColors = {
         ACTIVE: "bg-green-100 text-green-800",
-        INACTIVE: "bg-gray-100 text-gray-800",
-        SUSPENDED: "bg-red-100 text-red-800",
+        BLOCKED: "bg-red-100 text-red-800",
       };
 
       return (
         <span
-          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${statusColors[status]}`}
+          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+            statusColors[status as keyof typeof statusColors]
+          }`}
         >
           {status}
         </span>
@@ -244,58 +243,46 @@ export const getUserColumns = ({
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const user = row.original;
-      const [isOpen, setIsOpen] = React.useState(false);
+      const brand = row.original;
 
       return (
-        <div className="relative">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="h-8 w-8 p-0 hover:bg-gray-100 rounded-md flex items-center justify-center transition-colors"
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            asChild
+            className={`${brand.role === "ADMIN" && "hidden"}`}
           >
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </button>
-
-          {isOpen && (
-            <div className="absolute right-0 top-8 z-50 min-w-[160px] bg-white rounded-md shadow-lg border border-gray-200 py-1">
-              <button
-                onClick={() => {
-                  onViewProfile(user);
-                  setIsOpen(false);
-                }}
-                className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                View Profile
-              </button>
-              <button
-                onClick={() => {
-                  onEdit(user);
-                  setIsOpen(false);
-                }}
-                className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                Edit User
-              </button>
-              <button
-                onClick={() => {
-                  onDelete(user);
-                  setIsOpen(false);
-                }}
-                className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 transition-colors"
-              >
-                Delete User
-              </button>
-            </div>
-          )}
-
-          {isOpen && (
-            <div
-              className="fixed inset-0 z-40"
-              onClick={() => setIsOpen(false)}
-            />
-          )}
-        </div>
+            <Button
+              variant="ghost"
+              className="h-8 w-8 p-0"
+              disabled={brand.role === "ADMIN"}
+            >
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              className="text-blue-600"
+              onClick={() => onView(brand.id)}
+            >
+              View
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className={
+                brand.status === "ACTIVE" ? "text-red-600" : "text-green-600"
+              }
+              onClick={() =>
+                onStatusChange(
+                  brand.id,
+                  brand.status === "ACTIVE" ? "BLOCKED" : "ACTIVE"
+                )
+              }
+            >
+              {row.original.status === "ACTIVE" ? "Block" : "Activate"}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },

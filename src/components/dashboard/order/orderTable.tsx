@@ -1,6 +1,4 @@
 "use client";
-import { getAllUsers, updateUserStatus } from "@/services/userServices";
-import { getUserColumns, mockUsers, User } from "@/types/user";
 import {
   ColumnFiltersState,
   flexRender,
@@ -11,55 +9,40 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronDown, User as UserIcon } from "lucide-react";
-import React, { useEffect } from "react";
-import { toast } from "sonner";
+import { ChevronDown, ShoppingCart } from "lucide-react";
+import React from "react";
 
-export default function UserTable() {
-  const [loading, setLoading] = React.useState(true);
-  const [users, setUsers] = React.useState<User[]>([]);
+import { getOrderColumns, mockOrders, Order } from "@/types/order";
+
+export default function OrderTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
-  // Fetch users
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const result = await getAllUsers();
-      console.log("users", result);
-      if (result.length > 0) setUsers(result);
-      setLoading(false);
-    };
-    fetchUsers();
-  }, [loading]);
-  const handleView = (id: string) => {
-    console.log("Edit user:", id);
+
+  const handleEdit = (order: Order) => {
+    console.log("Edit order:", order);
     // Implement edit functionality
   };
 
-  const handleStatusChange = async (id: string, status: string) => {
-    const toastId = toast.loading("Updating user status...");
+  const handleDelete = (order: Order) => {
+    console.log("Cancel order:", order);
+    // Implement cancel functionality
+  };
 
-    // console.log("Delete user:", id);
-    // console.log("id", id, "status", status);
-    const res = await updateUserStatus(id, status);
-    console.log("res", res);
-    if (res.success) {
-      toast.success(res.message, { id: toastId });
-      setLoading(true);
-    } else {
-      toast.error(res.message, { id: toastId });
-    }
-    // Implement delete functionality
+  const handleViewDetails = (order: Order) => {
+    console.log("View order details:", order);
+    // Implement view details functionality
   };
 
   const table = useReactTable({
-    data: users,
-    columns: getUserColumns({
-      onView: handleView,
-      onStatusChange: handleStatusChange,
+    data: mockOrders,
+    columns: getOrderColumns({
+      onEdit: handleEdit,
+      onDelete: handleDelete,
+      onViewDetails: handleViewDetails,
     }),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -84,11 +67,11 @@ export default function UserTable() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-              <UserIcon className="mr-3 h-8 w-8 text-orange-600" />
-              User Management
+              <ShoppingCart className="mr-3 h-8 w-8 text-orange-600" />
+              Order Management
             </h1>
             <p className="text-gray-600 mt-1">
-              Manage your users efficiently with comprehensive tools
+              Track and manage customer orders efficiently
             </p>
           </div>
         </div>
@@ -101,10 +84,10 @@ export default function UserTable() {
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
             <div>
               <input
-                placeholder="Filter users..."
-                value={String(table.getColumn("name")?.getFilterValue() ?? "")}
+                placeholder="Filter orders..."
+                value={String(table.getColumn("id")?.getFilterValue() ?? "")}
                 onChange={(event) =>
-                  table.getColumn("name")?.setFilterValue(event.target.value)
+                  table.getColumn("id")?.setFilterValue(event.target.value)
                 }
                 className="max-w-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
@@ -136,55 +119,43 @@ export default function UserTable() {
                   </tr>
                 ))}
               </thead>
-              {loading ? (
-                <>
-                  {Array.from({ length: 5 }).map((_, rowIndex) => (
-                    <tr key={rowIndex} className="border-b border-gray-100">
-                      {Array.from({ length: 8 }).map((_, colIndex) => (
-                        <td key={colIndex} className="px-4 py-3">
-                          <div className="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
+              <tbody className="divide-y divide-gray-200">
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <tr
+                      key={row.id}
+                      className="hover:bg-gray-50 transition-colors"
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <td key={cell.id} className="px-6 py-4">
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
                         </td>
                       ))}
                     </tr>
-                  ))}
-                </>
-              ) : (
-                <tbody className="divide-y divide-gray-200">
-                  {table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) => (
-                      <tr
-                        key={row.id}
-                        className="hover:bg-gray-50 transition-colors"
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <td key={cell.id} className="px-6 py-4">
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan={
-                          getUserColumns({
-                            onView: handleView,
-                            onStatusChange: handleStatusChange,
-                          }).length
-                        }
-                        className="h-24 text-center text-gray-500"
-                      >
-                        No users found.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              )}
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={
+                        getOrderColumns({
+                          onEdit: handleEdit,
+                          onDelete: handleDelete,
+                          onViewDetails: handleViewDetails,
+                        }).length
+                      }
+                      className="h-24 text-center text-gray-500"
+                    >
+                      No orders found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
             </table>
           </div>
+
           {/* Pagination */}
           <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
             <div className="text-sm text-gray-700">
