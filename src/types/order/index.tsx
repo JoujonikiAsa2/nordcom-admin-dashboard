@@ -17,6 +17,7 @@ import {
   Package,
   Calendar,
   Eye,
+  Check,
 } from "lucide-react";
 import React from "react";
 
@@ -35,13 +36,11 @@ export interface Order {
 }
 
 export const getOrderColumns = ({
-  onEdit,
-  onDelete,
+  onStatusChange,
   onViewDetails,
 }: {
-  onEdit: (order: Order) => void;
-  onDelete: (order: Order) => void;
-  onViewDetails: (order: Order) => void;
+  onStatusChange: (id: string, status: string) => void;
+  onViewDetails: (id: string, status: string) => void;
 }) => [
   {
     accessorKey: "id",
@@ -143,7 +142,9 @@ export const getOrderColumns = ({
 
       return (
         <span
-          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${paymentColors[paymentStatus]}`}
+          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+            paymentColors[paymentStatus as keyof typeof paymentColors]
+          }`}
         >
           {paymentStatus}
         </span>
@@ -177,7 +178,14 @@ export const getOrderColumns = ({
     enableHiding: false,
     cell: ({ row }) => {
       const order = row.original;
-
+      const availableStatus = row.original.availableStatus;
+      const statusColors = {
+        PENDING: "text-yellow-800",
+        PAID: "text-blue-800",
+        SHIPPED: "text-purple-800",
+        CANCELLED: "text-red-800",
+        COMPLETED: "text-green-800",
+      };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -189,12 +197,23 @@ export const getOrderColumns = ({
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => onViewDetails(order)}
+              onClick={() => onViewDetails(order.id, order.status)}
               className="cursor-pointer"
             >
-              <Eye className="mr-2 h-4 w-4" />
-              View
+              View Order
             </DropdownMenuItem>
+
+            {availableStatus.map((status: string) => (
+              <DropdownMenuItem
+                key={status}
+                onClick={() => onStatusChange(order.id, status)}
+                className={`cursor-pointer ${
+                  statusColors[status as keyof typeof statusColors]
+                }`}
+              >
+                {status}
+              </DropdownMenuItem>
+            ))}
           </DropdownMenuContent>
         </DropdownMenu>
       );

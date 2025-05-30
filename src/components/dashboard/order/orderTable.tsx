@@ -10,38 +10,62 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronDown, ShoppingCart } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import { getOrderColumns, mockOrders, Order } from "@/types/order";
+import { getOrderColumns, Order } from "@/types/order";
+import { changeOrderStatus, getAllOrders } from "@/services/order";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function OrderTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+
+  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const handleEdit = (order: Order) => {
-    console.log("Edit order:", order);
-    // Implement edit functionality
+  useEffect(() => {
+    const fetchOrder = async () => {
+      const res = await getAllOrders();
+      console.log("orders", res);
+      if (res.length > 0) setOrders(res);
+      setLoading(false);
+    };
+    fetchOrder();
+  }, [loading]);
+
+  const handleStatusChange = async (id: string, status: string) => {
+    const toastId = toast.loading("Updating order status...");
+    const res = await changeOrderStatus(id, status);
+    console.log("res", res);
+    if (res.success) {
+      toast.success(res.message, { id: toastId });
+      setLoading(true);
+    } else {
+      toast.error(res.message, { id: toastId });
+    }
+    // Implement view details functionality
   };
 
-  const handleDelete = (order: Order) => {
-    console.log("Cancel order:", order);
-    // Implement cancel functionality
-  };
-
-  const handleViewDetails = (order: Order) => {
-    console.log("View order details:", order);
+  const handleViewDetails = (id: string, status: string) => {
+    console.log("View order details:", id, status);
     // Implement view details functionality
   };
 
   const table = useReactTable({
-    data: mockOrders,
+    data: orders,
     columns: getOrderColumns({
-      onEdit: handleEdit,
-      onDelete: handleDelete,
+      onStatusChange: handleStatusChange,
       onViewDetails: handleViewDetails,
     }),
     onSortingChange: setSorting,
@@ -85,18 +109,42 @@ export default function OrderTable() {
             <div>
               <input
                 placeholder="Filter orders..."
-                value={String(table.getColumn("id")?.getFilterValue() ?? "")}
+                value={String(
+                  table.getColumn("userName")?.getFilterValue() ?? ""
+                )}
                 onChange={(event) =>
-                  table.getColumn("id")?.setFilterValue(event.target.value)
+                  table
+                    .getColumn("userName")
+                    ?.setFilterValue(event.target.value)
                 }
                 className="max-w-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
             <div className="relative">
-              <button className="ml-auto border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50 flex items-center space-x-2 transition-colors">
-                <span>Columns</span>
-                <ChevronDown className="h-4 w-4" />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="ml-auto">
+                    Columns <ChevronDown />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {table
+                    .getAllColumns()
+                    .filter((column) => column.getCanHide())
+                    .map((column) => (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 
@@ -119,40 +167,53 @@ export default function OrderTable() {
                   </tr>
                 ))}
               </thead>
-              <tbody className="divide-y divide-gray-200">
-                {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <tr
-                      key={row.id}
-                      className="hover:bg-gray-50 transition-colors"
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <td key={cell.id} className="px-6 py-4">
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
+              {loading ? (
+                <>
+                  {Array.from({ length: 5 }).map((_, rowIndex) => (
+                    <tr key={rowIndex} className="border-b border-gray-100">
+                      {Array.from({ length: 8 }).map((_, colIndex) => (
+                        <td key={colIndex} className="px-4 py-3">
+                          <div className="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
                         </td>
                       ))}
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan={
-                        getOrderColumns({
-                          onEdit: handleEdit,
-                          onDelete: handleDelete,
-                          onViewDetails: handleViewDetails,
-                        }).length
-                      }
-                      className="h-24 text-center text-gray-500"
-                    >
-                      No orders found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
+                  ))}
+                </>
+              ) : (
+                <tbody className="divide-y divide-gray-200">
+                  {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <tr
+                        key={row.id}
+                        className="hover:bg-gray-50 transition-colors"
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <td key={cell.id} className="px-6 py-4">
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={
+                          getOrderColumns({
+                            onViewDetails: handleViewDetails,
+                            onStatusChange: handleStatusChange,
+                          }).length
+                        }
+                        className="h-24 text-center text-gray-500"
+                      >
+                        No orders found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              )}
             </table>
           </div>
 

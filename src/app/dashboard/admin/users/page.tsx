@@ -1,5 +1,5 @@
 "use client";
-import { getAllUsers, updateUserStatus } from "@/services/userServices";
+import { getAllUsers, updateUserStatus } from "@/services/user";
 import { getUserColumns, mockUsers, User } from "@/types/user";
 import {
   ColumnFiltersState,
