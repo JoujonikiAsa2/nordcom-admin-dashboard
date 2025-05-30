@@ -1,8 +1,9 @@
 export interface BrandFormData {
   name: string;
   description: string;
-  logoFile: File | null;
+  logoUrl: File | null;
   logoPreview: string;
+  isFeatured: boolean,
 }
 
 export interface CategoryFormData {

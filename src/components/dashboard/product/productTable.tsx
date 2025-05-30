@@ -62,19 +62,9 @@ const ProductsTable = () => {
   return (
     <div className="w-full bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
       {/* Enhanced Header Section */}
-      <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-6">
+      <div className=" p-6 text-black">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div>
-            <h3 className="text-2xl font-bold text-white mb-2">
-              Products Inventory
-            </h3>
-            <p className="text-blue-100 text-sm">
-              Manage and track your product catalog
-            </p>
-          </div>
-
-          {/* Enhanced Search and Filter Section */}
-          <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
@@ -85,14 +75,17 @@ const ProductsTable = () => {
                 onChange={(e) =>
                   table.getColumn("name")?.setFilterValue(e.target.value)
                 }
-                className="pl-10 pr-4 py-3 w-full sm:w-80 bg-white/90 backdrop-blur border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent placeholder-gray-500 text-gray-800 shadow-lg"
+                className="pl-10 pr-4 py-3 w-full sm:w-80 bg-white/90 backdrop-blur border border-gray/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent placeholder-gray-500 text-gray-800 shadow-lg"
               />
             </div>
+          </div>
 
+          {/* Enhanced Search and Filter Section */}
+          <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
             <div className="relative">
               <button
                 onClick={() => setShowColumnMenu(!showColumnMenu)}
-                className="px-6 py-3 bg-white/10 backdrop-blur border border-white/20 rounded-xl hover:bg-white/20 flex items-center space-x-2 transition-all duration-200 text-white shadow-lg w-full sm:w-auto justify-center"
+                className="px-6 py-3 bg-white/10 backdrop-blur border border-white/20 rounded-xl hover:bg-white/20 flex items-center space-x-2 transition-all duration-200 text-black shadow-lg w-full sm:w-auto justify-center"
               >
                 <Filter className="h-4 w-4" />
                 <span>Columns</span>

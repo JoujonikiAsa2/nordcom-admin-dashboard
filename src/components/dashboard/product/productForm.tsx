@@ -15,7 +15,14 @@ import {
 import { Plus, X } from "lucide-react";
 import Image from "next/image";
 import { mockBrands, mockCategories } from "./mockData";
+import { getAllBrands } from "@/services/brand";
+import { Brand } from "@/types/brand";
+import { getAllCategories } from "@/services/category";
+import { Category } from "@/types/category";
 const ProductForm = () => {
+  const [loading, setLoading] = useState(true);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [productForm, setProductForm] = useState({
     name: "",
     sku: "",
@@ -31,6 +38,33 @@ const ProductForm = () => {
     seoInformation: [{ key: "", value: "" }],
     variants: [""],
   });
+
+  React.useEffect(() => {
+    const fetchBrandsAndCategories = async () => {
+      const resBrand = await getAllBrands();
+      const resCategory = await getAllCategories();
+      if (resBrand.length > 0) {
+        const brandOptions = resBrand.map((brand: Brand) => ({
+          id: brand.id,
+          name: brand.name,
+        }));
+        console.log("brands", brandOptions);
+        setBrands(brandOptions);
+      }
+      if (resCategory.length > 0) {
+        const categoryOptions = resCategory.map((category: Category) => ({
+          id: category.id,
+          name: category.name,
+        }));
+        setCategories(categoryOptions);
+        console.log("categories", categoryOptions);
+      }
+
+      setLoading(false);
+    };
+
+    fetchBrandsAndCategories();
+  }, []);
 
   const handleProductImageUpload = (
     index: number,
@@ -50,7 +84,7 @@ const ProductForm = () => {
   const handleProductSubmit = () => {
     const payload = {
       ...productForm,
-      imageFiles: productForm.imageFiles[0],
+      imageUrl: productForm.imageFiles[0],
     };
     console.log("Product Form Data:", payload);
 
@@ -146,7 +180,7 @@ const ProductForm = () => {
       ),
     }));
   };
-  // console.log(productForm); 
+  // console.log(productForm);
   return (
     <div className="max-w-4xl mx-auto">
       <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-gray-50">
@@ -351,7 +385,7 @@ const ProductForm = () => {
                       <SelectValue placeholder="Select brand" />
                     </SelectTrigger>
                     <SelectContent>
-                      {mockBrands.map((brand) => (
+                      {brands.map((brand) => (
                         <SelectItem key={brand.id} value={brand.id}>
                           {brand.name}
                         </SelectItem>
@@ -375,7 +409,7 @@ const ProductForm = () => {
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
-                      {mockCategories.map((category) => (
+                      {categories.map((category) => (
                         <SelectItem key={category.id} value={category.id}>
                           {category.name}
                         </SelectItem>

@@ -29,6 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getAllCategories } from "@/services/category";
 
 const mockCategories: Category[] = [
   {
@@ -58,10 +59,23 @@ const mockCategories: Category[] = [
 ];
 
 const CategoryTable = () => {
+  const [loading, setLoading] = React.useState(false);
+  const [categories, setCategories] = React.useState<Category[]>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  React.useEffect(() => {
+    const fetchCategories = async () => {
+      const res = await getAllCategories();
+      if (res.length > 0) setCategories(res);
+      console.log("categories", res);
+      setLoading(false);
+    };
+
+    fetchCategories();
+  }, [loading]);
+  console.log("categories", categories);
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
@@ -78,7 +92,7 @@ const CategoryTable = () => {
   };
 
   const table = useReactTable({
-    data: mockCategories,
+    data: categories,
     columns: getCategoryColumns({ onEdit: handleEdit, onDelete: handleDelete }),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -174,7 +188,7 @@ const CategoryTable = () => {
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={categories.length}
                   className="h-24 text-center"
                 >
                   No results.

@@ -25,7 +25,7 @@ const CategoryPage = () => {
 
   return (
     <div className=" bg-gradient-to-br from-gray-50 to-gray-100 p-4 lg:p-8">
-      <div className="max-w-7xl mx-auto">
+      <div className=" mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-2">
@@ -61,7 +61,7 @@ const CategoryPage = () => {
                               tab.color === "orange"
                                 ? "from-orange-500 to-orange-600"
                                 : "from-blue-500 to-blue-600"
-                            } text-white shadow-lg transform scale-105`
+                            } text-white shadow-lg transform `
                           : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
                       }
                     `}
@@ -112,7 +112,7 @@ const CategoryPage = () => {
             <div className="w-full flex-shrink-0">
               <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
                 <div className="p-1">
-                  <CategoryForm />
+                  <CategoryForm setActiveTab={setActiveTab} />
                 </div>
               </div>
             </div>

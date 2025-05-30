@@ -11,19 +11,38 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CategoryFormData } from "@/types/category";
+import { toast } from "sonner";
+import { createCategory } from "@/services/category";
 const mockCategories = [
   { id: "1", name: "Electronics" },
   { id: "2", name: "Clothing" },
   { id: "3", name: "Sports" },
 ];
-const CategoryForm = () => {
+const CategoryForm = ({
+  setActiveTab,
+}: {
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const [categoryForm, setCategoryForm] = useState<CategoryFormData>({
     name: "",
     slug: "",
     parentId: "",
   });
-  const handleCategorySubmit = () => {
+  const handleCategorySubmit = async () => {
+    const toastId = toast.loading("Creating category...");
+
     console.log("Category Form Data:", categoryForm);
+    const res = await createCategory({
+      name: categoryForm.name,
+      slug: categoryForm.slug,
+    });
+    if (res.success) {
+      toast.success(res.message, { id: toastId });
+      setActiveTab("all-category");
+    } else {
+      toast.error(res.message, { id: toastId });
+    }
+
     // Handle category creation
   };
   return (

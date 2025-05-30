@@ -25,7 +25,7 @@ const BrandPage = () => {
 
   return (
     <div className=" bg-gradient-to-br from-gray-50 to-gray-100 p-4 lg:p-8">
-      <div className="max-w-7xl mx-auto">
+      <div className=" mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-2">
@@ -54,14 +54,14 @@ const BrandPage = () => {
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={`
-                      relative flex items-center justify-center space-x-3 px-6 py-4 rounded-xl font-semibold text-sm transition-all duration-300 flex-1
+                      relative flex items-center justify-center space-x-3 px-4 py-4 rounded-xl font-semibold text-sm transition-all duration-300 flex-1
                       ${
                         isActive
                           ? `bg-gradient-to-r ${
                               tab.color === "orange"
                                 ? "from-orange-500 to-orange-600"
                                 : "from-blue-500 to-blue-600"
-                            } text-white shadow-lg transform scale-105`
+                            } text-white shadow-lg transition-all duration-300`
                           : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
                       }
                     `}
@@ -112,7 +112,7 @@ const BrandPage = () => {
             <div className="w-full flex-shrink-0">
               <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
                 <div className="p-1">
-                  <BrandForm />
+                  <BrandForm setActiveTab={setActiveTab} />
                 </div>
               </div>
             </div>
