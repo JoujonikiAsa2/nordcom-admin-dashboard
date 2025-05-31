@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${sora.className} antialiased`}>
         <ReduxProvider>
-          <Toaster />
+          <Toaster richColors/>
           {children}
         </ReduxProvider>
       </body>

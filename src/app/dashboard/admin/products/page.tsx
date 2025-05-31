@@ -2,6 +2,7 @@
 
 import ProductForm from "@/components/dashboard/product/productForm";
 import ProductsTable from "@/components/dashboard/product/productTable";
+import VProductForm from "@/components/dashboard/product/productVForm";
 import { List, Package, Plus } from "lucide-react";
 import { useState } from "react";
 
@@ -112,7 +113,7 @@ const ProductsPage = () => {
             <div className="w-full flex-shrink-0">
               <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
                 <div className="p-1">
-                  <ProductForm />
+                  <VProductForm setActiveTab={setActiveTab} />
                 </div>
               </div>
             </div>

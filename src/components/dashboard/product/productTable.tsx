@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   ColumnFiltersState,
   SortingState,
@@ -13,18 +12,29 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronDown, Filter, Package, Search } from "lucide-react";
-import { getProductColumns } from "@/types/product";
-import { mockProducts } from "./mockData";
+import { getProductColumns, Product } from "@/types/product";
+import { useEffect, useState } from "react";
+import { getAllProducts } from "@/services/product";
+import { useRouter } from "next/navigation";
 
 const ProductsTable = () => {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [showColumnMenu, setShowColumnMenu] = React.useState(false);
+  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const router = useRouter();
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const res = await getAllProducts();
+      console.log("products", res);
+      if (res.length > 0) setProducts(res);
+      setLoading(false);
+    };
+    fetchProducts();
+  }, [loading]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [showColumnMenu, setShowColumnMenu] = useState(false);
 
   const onView = (id: string) => {
     console.log("View product:", id);
@@ -32,6 +42,7 @@ const ProductsTable = () => {
 
   const onEdit = (id: string) => {
     console.log("Edit product:", id);
+    router.push(`/dashboard/admin/edit/product/${id}`);
   };
 
   const onDelete = (id: string) => {
@@ -41,7 +52,7 @@ const ProductsTable = () => {
   const columns = getProductColumns({ onEdit, onDelete, onView });
 
   const table = useReactTable({
-    data: mockProducts,
+    data: products,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

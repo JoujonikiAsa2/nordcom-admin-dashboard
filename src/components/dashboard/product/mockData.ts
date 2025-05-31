@@ -1,5 +1,15 @@
 import { Product } from "@/types/product";
 
+
+// {
+//   images: [
+//     "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=100&h=100&fit=crop",
+//   ],
+// },
+
+
+
+
 export const mockProducts: Product[] = [
   {
     id: "1",
