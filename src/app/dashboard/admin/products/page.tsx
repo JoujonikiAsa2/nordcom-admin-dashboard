@@ -1,6 +1,5 @@
 "use client";
 
-import ProductForm from "@/components/dashboard/product/productForm";
 import ProductsTable from "@/components/dashboard/product/productTable";
 import VProductForm from "@/components/dashboard/product/productVForm";
 import { List, Package, Plus } from "lucide-react";
@@ -25,7 +24,7 @@ const ProductsPage = () => {
   ];
 
   return (
-    <div className=" bg-gradient-to-br from-gray-50 to-gray-100 p-4 lg:p-8">
+    <div className=" bg-gradient-to-br from-gray-50 to-gray-100 p-4 ">
       <div className=" mx-auto">
         {/* Header */}
         <div className="mb-8">

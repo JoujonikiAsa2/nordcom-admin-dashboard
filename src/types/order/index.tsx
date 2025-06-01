@@ -8,6 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ColumnDef } from "@tanstack/react-table";
 import {
   ShoppingCart,
   ArrowUpDown,
@@ -16,8 +17,6 @@ import {
   DollarSign,
   Package,
   Calendar,
-  Eye,
-  Check,
 } from "lucide-react";
 import React from "react";
 
@@ -33,15 +32,14 @@ export interface Order {
   shippingFee: number;
   createdAt: string;
   updatedAt: string;
+  availableStatus: string[];
 }
 
 export const getOrderColumns = ({
   onStatusChange,
-  onViewDetails,
 }: {
   onStatusChange: (id: string, status: string) => void;
-  onViewDetails: (id: string, status: string) => void;
-}) => [
+}): ColumnDef<Order>[] => [
   {
     accessorKey: "id",
     header: ({ column }) => (
@@ -196,13 +194,6 @@ export const getOrderColumns = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => onViewDetails(order.id, order.status)}
-              className="cursor-pointer"
-            >
-              View Order
-            </DropdownMenuItem>
-
             {availableStatus.map((status: string) => (
               <DropdownMenuItem
                 key={status}
@@ -218,73 +209,5 @@ export const getOrderColumns = ({
         </DropdownMenu>
       );
     },
-  },
-];
-
-export const mockOrders: Order[] = [
-  {
-    id: "ord_001",
-    userId: "user_001",
-    userName: "John Doe",
-    userEmail: "john.doe@example.com",
-    totalAmount: 299.99,
-    totalProduct: 3,
-    status: "COMPLETED",
-    paymentStatus: "PAID",
-    shippingFee: 15,
-    createdAt: new Date("2024-03-01").toISOString(),
-    updatedAt: new Date("2024-03-05").toISOString(),
-  },
-  {
-    id: "ord_002",
-    userId: "user_002",
-    userName: "Jane Smith",
-    userEmail: "jane.smith@example.com",
-    totalAmount: 149.5,
-    totalProduct: 2,
-    status: "SHIPPED",
-    paymentStatus: "PAID",
-    shippingFee: 10,
-    createdAt: new Date("2024-03-10").toISOString(),
-    updatedAt: new Date("2024-03-12").toISOString(),
-  },
-  {
-    id: "ord_003",
-    userId: "user_003",
-    userName: "Mike Johnson",
-    userEmail: "mike.johnson@example.com",
-    totalAmount: 75.25,
-    totalProduct: 1,
-    status: "PENDING",
-    paymentStatus: "UNPAID",
-    shippingFee: 8,
-    createdAt: new Date("2024-03-15").toISOString(),
-    updatedAt: new Date("2024-03-15").toISOString(),
-  },
-  {
-    id: "ord_004",
-    userId: "user_004",
-    userName: "Sarah Wilson",
-    userEmail: "sarah.wilson@example.com",
-    totalAmount: 450.0,
-    totalProduct: 5,
-    status: "CANCELLED",
-    paymentStatus: "FAILED",
-    shippingFee: 20,
-    createdAt: new Date("2024-03-08").toISOString(),
-    updatedAt: new Date("2024-03-09").toISOString(),
-  },
-  {
-    id: "ord_005",
-    userId: "user_005",
-    userName: "David Brown",
-    userEmail: "david.brown@example.com",
-    totalAmount: 189.99,
-    totalProduct: 2,
-    status: "PAID",
-    paymentStatus: "PAID",
-    shippingFee: 12,
-    createdAt: new Date("2024-03-20").toISOString(),
-    updatedAt: new Date("2024-03-21").toISOString(),
   },
 ];

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { ColumnDef } from "@tanstack/react-table";
 export interface User {
   id: string;
   name: string;
@@ -106,7 +107,7 @@ export const getUserColumns = ({
 }: {
   onView: (id: string) => void;
   onStatusChange: (id: string, status: string) => void;
-}) => [
+}): ColumnDef<User>[] => [
   {
     accessorKey: "name",
     header: ({ column }) => (

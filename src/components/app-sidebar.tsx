@@ -3,14 +3,13 @@
 import * as React from "react";
 import {
   LayoutGrid,
-  BarChart3,
   Users,
   ShoppingCart,
   Package,
-  Settings,
   FileCode,
   FileText,
   Receipt,
+  User,
 } from "lucide-react";
 import {
   Sidebar,
@@ -22,9 +21,8 @@ import {
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
-import { useSelector } from "react-redux";
-import { RootState } from "@/lib/store";
 import NordcomLogo from "@/assets/svg/nordcomiconAdmin";
+import { decodedUserInfoFromToken } from "@/services/user";
 
 const adminBar = [
   {
@@ -63,19 +61,34 @@ const adminBar = [
     icon: Users,
   },
   {
-    title: "Settings",
-    url: "/dashboard/admin/settings",
-    icon: Settings,
+    title: "Profile",
+    url: "/dashboard/admin/profile",
+    icon: User,
   },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const data = useSelector((state: RootState) => {
-    console.log("Redux state in sidebar:", state);
-    return state.auth?.user;
-  });
+  const [profile, setProfile] = React.useState<{
+    name: string;
+    email: string;
+  } | null>(null);
+  React.useEffect(() => {
+    const getUserInfo = async () => {
+      const user = await decodedUserInfoFromToken();
+      console.log("current user", user);
+      if (user) {
+        setProfile(
+          user as {
+            name: string;
+            email: string;
+          }
+        );
+      }
+    };
+    getUserInfo();
+  }, []);
 
-  console.log(data);
+  // console.log(profile);
   return (
     <Sidebar
       collapsible="offcanvas"
@@ -85,9 +98,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader className="h-20 bg-slate-800 border-b border-slate-700">
         <SidebarMenu className="flex justify-center items-center h-full">
           <SidebarMenuItem>
-            <div className="flex items-center space-x-2">
-              <NordcomLogo className="h-8 w-auto text-white" />
-            </div>
+            <NordcomLogo className="h-8 w-auto text-white" />
+            <div className="flex items-center space-x-2"></div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -97,8 +109,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter className="bg-slate-800 border-t border-slate-700">
         <NavUser
           user={{
-            name: (data?.name as string) || "Admin",
-            email: (data?.email as string) || "admin@nordcom.com",
+            name: profile?.name as string,
+            email: profile?.email as string,
           }}
         />
       </SidebarFooter>

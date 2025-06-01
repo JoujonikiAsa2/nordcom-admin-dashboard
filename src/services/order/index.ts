@@ -1,9 +1,11 @@
 "use server";
 
+import { getTokenFromCookies } from "../user";
+
 const url = process.env.NEXT_PUBLIC_API_URL;
-const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTnVzcmF0IEphaGFuIFN1c2htaXRhIiwiZW1haWwiOiJudXNpZUBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDg2NjIyNzksImV4cCI6MTc0ODc0ODY3OX0.TPTYOH-yiLdBIhW5uVuiCdTXI28d4cr4fz-Otm9ems8`;
 
 export const getAllOrders = async () => {
+  const token = await getTokenFromCookies();
   try {
     const res = await fetch(`${url}/order`, {
       headers: {
@@ -20,7 +22,8 @@ export const getAllOrders = async () => {
 
 export const changeOrderStatus = async (id: string, status: string) => {
   const body = JSON.stringify({ status });
-  console.log("id", id, "status", body);
+  const token = await getTokenFromCookies();
+
   try {
     const res = await fetch(`${url}/order/status/${id}`, {
       method: "PATCH",

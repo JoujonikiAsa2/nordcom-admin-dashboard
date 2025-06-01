@@ -9,16 +9,21 @@ export async function middleware(request: NextRequest) {
   const token = await getTokenFromCookies();
   console.log("token from middleware", token);
   const isPublicRoute = route === "/";
+  console.log("is public route", isPublicRoute);
   if (!token && !isPublicRoute) {
+    console.log("hitting 1");
     return NextResponse.redirect(new URL("/", request.url));
   }
-  if (isPublicRoute) {
+  if (isPublicRoute && token) {
+    console.log("hitting 2");
     const redirectRoute = "/dashboard";
     return NextResponse.redirect(new URL(redirectRoute, request.url));
   }
+
+  return NextResponse.next();
 }
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/",],
+  matcher: ["/", "/dashboard/:slug*"],
 };

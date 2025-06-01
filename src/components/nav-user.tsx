@@ -15,6 +15,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { logout } from "@/services/auth";
+import { useRouter } from "next/navigation";
 // import { logoutuser } from "@/services/auth";
 // import { logout } from "@/lib/auth/authSlice";
 // import { useAppDispatch } from "@/lib/hook";
@@ -29,6 +31,7 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
+  const router = useRouter();
   // const dispatch = useAppDispatch()
   return (
     <SidebarMenu>
@@ -74,8 +77,11 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={async () => {
-
-                // await logoutuser();
+                const res = await logout();
+                console.log("res", res);
+                if (!res) {
+                  router.push("/");
+                }
                 // dispatch(logout());
               }}
             >

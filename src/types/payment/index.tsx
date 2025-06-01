@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { ColumnDef } from "@tanstack/react-table";
 
 export interface Payment {
   id: string;
@@ -29,73 +30,7 @@ export interface Payment {
   updatedAt: string;
 }
 
-export const mockPayments: Payment[] = [
-  {
-    id: "pay_1",
-    orderId: "ord_001",
-    method: "Credit Card",
-    amount: 299.99,
-    status: "PAID",
-    transactionId: "txn_abc123",
-    paidAt: new Date("2024-03-20T10:30:00").toISOString(),
-    createdAt: new Date("2024-03-20T10:25:00").toISOString(),
-    updatedAt: new Date("2024-03-20T10:30:00").toISOString(),
-  },
-  {
-    id: "pay_2",
-    orderId: "ord_002",
-    method: "PayPal",
-    amount: 149.5,
-    status: "PAID",
-    transactionId: "txn_def456",
-    paidAt: new Date("2024-03-19T14:20:00").toISOString(),
-    createdAt: new Date("2024-03-19T14:15:00").toISOString(),
-    updatedAt: new Date("2024-03-19T14:20:00").toISOString(),
-  },
-  {
-    id: "pay_3",
-    orderId: "ord_003",
-    method: "Bank Transfer",
-    amount: 89.99,
-    status: "UNPAID",
-    transactionId: null,
-    paidAt: null,
-    createdAt: new Date("2024-03-18T09:15:00").toISOString(),
-    updatedAt: new Date("2024-03-18T09:15:00").toISOString(),
-  },
-  {
-    id: "pay_4",
-    orderId: "ord_004",
-    method: "Credit Card",
-    amount: 450.0,
-    status: "FAILED",
-    transactionId: "txn_ghi789",
-    paidAt: null,
-    createdAt: new Date("2024-03-17T16:45:00").toISOString(),
-    updatedAt: new Date("2024-03-17T16:50:00").toISOString(),
-  },
-  {
-    id: "pay_5",
-    orderId: "ord_005",
-    method: "Digital Wallet",
-    amount: 199.99,
-    status: "PAID",
-    transactionId: "txn_jkl012",
-    paidAt: new Date("2024-03-16T11:30:00").toISOString(),
-    createdAt: new Date("2024-03-16T11:25:00").toISOString(),
-    updatedAt: new Date("2024-03-16T11:30:00").toISOString(),
-  },
-];
-
-export const getPaymentColumns = ({
-  onEdit,
-  onDelete,
-  onViewDetails,
-}: {
-  onEdit: (payment: Payment) => void;
-  onDelete: (payment: Payment) => void;
-  onViewDetails: (payment: Payment) => void;
-}) => [
+export const getPaymentColumns = (): ColumnDef<Payment>[] => [
   {
     accessorKey: "id",
     header: ({ column }) => (
@@ -229,7 +164,7 @@ export const getPaymentColumns = ({
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() =>
-                navigator.clipboard.writeText(payment.transactionId)
+                navigator.clipboard.writeText(payment.transactionId!)
               }
               className="cursor-pointer"
             >
@@ -239,5 +174,63 @@ export const getPaymentColumns = ({
         </DropdownMenu>
       );
     },
+  },
+];
+
+export const mockPayments: Payment[] = [
+  {
+    id: "pay_1",
+    orderId: "ord_001",
+    method: "Credit Card",
+    amount: 299.99,
+    status: "PAID",
+    transactionId: "txn_abc123",
+    paidAt: new Date("2024-03-20T10:30:00").toISOString(),
+    createdAt: new Date("2024-03-20T10:25:00").toISOString(),
+    updatedAt: new Date("2024-03-20T10:30:00").toISOString(),
+  },
+  {
+    id: "pay_2",
+    orderId: "ord_002",
+    method: "PayPal",
+    amount: 149.5,
+    status: "PAID",
+    transactionId: "txn_def456",
+    paidAt: new Date("2024-03-19T14:20:00").toISOString(),
+    createdAt: new Date("2024-03-19T14:15:00").toISOString(),
+    updatedAt: new Date("2024-03-19T14:20:00").toISOString(),
+  },
+  {
+    id: "pay_3",
+    orderId: "ord_003",
+    method: "Bank Transfer",
+    amount: 89.99,
+    status: "UNPAID",
+    transactionId: null,
+    paidAt: null,
+    createdAt: new Date("2024-03-18T09:15:00").toISOString(),
+    updatedAt: new Date("2024-03-18T09:15:00").toISOString(),
+  },
+  {
+    id: "pay_4",
+    orderId: "ord_004",
+    method: "Credit Card",
+    amount: 450.0,
+    status: "FAILED",
+    transactionId: "txn_ghi789",
+    paidAt: null,
+    createdAt: new Date("2024-03-17T16:45:00").toISOString(),
+    updatedAt: new Date("2024-03-17T16:50:00").toISOString(),
+  },
+  {
+    id: "pay_5",
+    orderId: "ord_005",
+    method: "Digital Wallet",
+    amount: 199.99,
+    status: "PAID",
+    transactionId: "txn_jkl012",
+    paidAt: new Date("2024-03-16T11:30:00").toISOString(),
+    createdAt: new Date("2024-03-16T11:25:00").toISOString(),
+    updatedAt: new Date("2024-03-16T11:30:00").toISOString(),
   },
 ];

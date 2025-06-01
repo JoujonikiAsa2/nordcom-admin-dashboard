@@ -1,9 +1,11 @@
 "use server";
 
+import getTokenFromCookies from "@/utils/getTokenFromCookies";
+
 const url = process.env.NEXT_PUBLIC_API_URL;
-const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTnVzcmF0IEphaGFuIFN1c2htaXRhIiwiZW1haWwiOiJudXNpZUBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDg2NjIyNzksImV4cCI6MTc0ODc0ODY3OX0.TPTYOH-yiLdBIhW5uVuiCdTXI28d4cr4fz-Otm9ems8`;
 
 export const createProduct = async (payload: FormData) => {
+  const token = await getTokenFromCookies();
   try {
     const res = await fetch(`${url}/product`, {
       method: "POST",
@@ -19,7 +21,9 @@ export const createProduct = async (payload: FormData) => {
     throw new Error("Failed to create product", error as Error);
   }
 };
+
 export const updateProduct = async (payload: FormData, id: string) => {
+  const token = await getTokenFromCookies();
   try {
     const res = await fetch(`${url}/product/update/${id}`, {
       method: "PATCH",
@@ -29,7 +33,7 @@ export const updateProduct = async (payload: FormData, id: string) => {
       body: payload,
     });
     const result = await res.json();
-    console.log("result from server", result);
+    console.log("result from updated server", result);
     return result;
   } catch (error: unknown) {
     throw new Error("Failed to update product", error as Error);

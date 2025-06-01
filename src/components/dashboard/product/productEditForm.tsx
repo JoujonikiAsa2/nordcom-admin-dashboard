@@ -118,7 +118,7 @@ const ProductFormEdit = () => {
       form.setValue("name", res.name);
       form.setValue("sku", res.sku);
       form.setValue("description", res.description);
-      form.setValue("price", res.price);
+      form.setValue("price", String(res.price));
       form.setValue("discountPrice", String(res.discountPrice));
       form.setValue("stock", String(res.stock));
       form.setValue("purchasedPrice", String(res.purchasedPrice));

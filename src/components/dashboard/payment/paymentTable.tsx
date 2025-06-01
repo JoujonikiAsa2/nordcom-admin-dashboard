@@ -11,7 +11,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronDown, CreditCard } from "lucide-react";
-import { getPaymentColumns, mockPayments, Payment } from "@/types/payment";
+import { getPaymentColumns, mockPayments } from "@/types/payment";
 export default function PaymentTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -20,28 +20,9 @@ export default function PaymentTable() {
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const handleEdit = (payment: Payment) => {
-    console.log("Edit payment:", payment);
-    // Implement edit functionality
-  };
-
-  const handleDelete = (payment: Payment) => {
-    console.log("Delete payment:", payment);
-    // Implement delete functionality
-  };
-
-  const handleViewDetails = (payment: Payment) => {
-    console.log("View payment details:", payment);
-    // Implement view details functionality
-  };
-
   const table = useReactTable({
     data: mockPayments,
-    columns: getPaymentColumns({
-      onEdit: handleEdit,
-      onDelete: handleDelete,
-      onViewDetails: handleViewDetails,
-    }),
+    columns: getPaymentColumns(),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -137,13 +118,7 @@ export default function PaymentTable() {
                 ) : (
                   <tr>
                     <td
-                      colSpan={
-                        getPaymentColumns({
-                          onEdit: handleEdit,
-                          onDelete: handleDelete,
-                          onViewDetails: handleViewDetails,
-                        }).length
-                      }
+                      colSpan={getPaymentColumns().length}
                       className="h-24 text-center text-gray-500"
                     >
                       No payments found.

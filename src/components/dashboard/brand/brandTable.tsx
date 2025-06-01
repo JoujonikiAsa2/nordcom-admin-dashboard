@@ -14,104 +14,14 @@ import {
 } from "@tanstack/react-table";
 import { ChevronDown, Tag } from "lucide-react";
 import { getBrandColumns } from "@/types/brand/index"; // Make sure this file exports column definitions
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Brand } from "@/types/brand/index";
 import { getAllBrands } from "@/services/brand";
-
-const mockBrands: Brand[] = [
-  {
-    id: "1",
-    name: "Samsung",
-    description:
-      "Leading global electronics company known for innovation in smartphones, TVs, and appliances.",
-    logoUrl: "https://logo.clearbit.com/samsung.com",
-    isFeatured: true,
-    createdAt: "2024-08-01T10:15:00Z",
-  },
-  {
-    id: "2",
-    name: "Apple",
-    description:
-      "American technology company that designs iPhones, Macs, and other premium products.",
-    logoUrl: "https://logo.clearbit.com/apple.com",
-    isFeatured: true,
-    createdAt: "2024-08-05T08:30:00Z",
-  },
-  {
-    id: "3",
-    name: "Sony",
-    description:
-      "Japanese brand famous for PlayStation, televisions, and high-quality audio gear.",
-    logoUrl: "https://logo.clearbit.com/sony.com",
-    isFeatured: false,
-    createdAt: "2024-08-10T14:45:00Z",
-  },
-  {
-    id: "4",
-    name: "LG",
-    description:
-      "South Korean company that manufactures electronics, home appliances, and mobile devices.",
-    logoUrl: "https://logo.clearbit.com/lg.com",
-    isFeatured: false,
-    createdAt: "2024-08-12T09:00:00Z",
-  },
-  {
-    id: "5",
-    name: "HP",
-    description:
-      "Trusted global brand for laptops, printers, and PC accessories.",
-    logoUrl: "https://logo.clearbit.com/hp.com",
-    isFeatured: true,
-    createdAt: "2024-08-15T16:20:00Z",
-  },
-  {
-    id: "6",
-    name: "Dell",
-    description:
-      "American multinational company specializing in computers and related services.",
-    logoUrl: "https://logo.clearbit.com/dell.com",
-    isFeatured: false,
-    createdAt: "2024-08-18T11:10:00Z",
-  },
-  {
-    id: "7",
-    name: "Asus",
-    description:
-      "Taiwanese electronics company that produces laptops, motherboards, and PC components.",
-    logoUrl: "https://logo.clearbit.com/asus.com",
-    isFeatured: true,
-    createdAt: "2024-08-22T07:55:00Z",
-  },
-  {
-    id: "8",
-    name: "Acer",
-    description:
-      "Global PC brand known for affordable laptops, desktops, and monitors.",
-    logoUrl: "https://logo.clearbit.com/acer.com",
-    isFeatured: false,
-    createdAt: "2024-08-25T13:40:00Z",
-  },
-];
+import { useRouter } from "next/navigation";
 
 const BrandTable = () => {
   const [loading, setLoading] = React.useState(false);
   const [brands, setBrands] = React.useState<Brand[]>([]);
-
+  const router = useRouter();
   React.useEffect(() => {
     const fetchBrands = async () => {
       const res = await getAllBrands();
@@ -132,8 +42,8 @@ const BrandTable = () => {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const onEdit = (id: string) => {
-    // router.push(`/dashboard/brands/edit/${id}`);
-    console.log(id);
+    router.push(`/dashboard/admin/edit/brand/${id}`);
+    // console.log(id);
   };
 
   const onDelete = (id: string) => {

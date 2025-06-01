@@ -37,7 +37,6 @@ export default function OrderTable() {
   useEffect(() => {
     const fetchOrder = async () => {
       const res = await getAllOrders();
-      console.log("orders", res);
       if (res.length > 0) setOrders(res);
       setLoading(false);
     };
@@ -47,7 +46,6 @@ export default function OrderTable() {
   const handleStatusChange = async (id: string, status: string) => {
     const toastId = toast.loading("Updating order status...");
     const res = await changeOrderStatus(id, status);
-    console.log("res", res);
     if (res.success) {
       toast.success(res.message, { id: toastId });
       setLoading(true);
@@ -57,16 +55,10 @@ export default function OrderTable() {
     // Implement view details functionality
   };
 
-  const handleViewDetails = (id: string, status: string) => {
-    console.log("View order details:", id, status);
-    // Implement view details functionality
-  };
-
   const table = useReactTable({
     data: orders,
     columns: getOrderColumns({
       onStatusChange: handleStatusChange,
-      onViewDetails: handleViewDetails,
     }),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

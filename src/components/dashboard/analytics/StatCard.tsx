@@ -1,4 +1,16 @@
-export const StatCard = ({ title, value, icon: Icon, color, change }) => (
+export const StatCard = ({
+  title,
+  value,
+  icon: Icon,
+  color,
+  change,
+}: {
+  title: string;
+  value: string;
+  icon: React.FC<React.SVGProps<SVGSVGElement>>;
+  color: string;
+  change: string;
+}) => (
   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
     <div className="flex items-center justify-between">
       <div>

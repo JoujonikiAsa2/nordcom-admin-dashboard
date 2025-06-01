@@ -8,130 +8,17 @@ export type Brand = {
   createdAt: string;
 };
 
+import { ColumnDef } from "@tanstack/react-table";
 // 2. Modify columns for BrandTable
-import { ArrowUpDown, Calendar, MoreHorizontal, Star, Tag } from "lucide-react";
+import { ArrowUpDown, Calendar, Edit, Star, Tag } from "lucide-react";
 import React from "react";
-// export const getBrandColumns = ({
-//   onEdit,
-//   onDelete,
-//   onView,
-// }: {
-//   onEdit: (id: string) => void;
-//   onDelete: (id: string) => void;
-//   onView: (id: string) => void;
-// }): ColumnDef<Brand>[] => [
-//   {
-//     id: "select",
-//     header: ({ table }) => (
-//       <Checkbox
-//         checked={
-//           table.getIsAllPageRowsSelected() ||
-//           (table.getIsSomePageRowsSelected() && "indeterminate")
-//         }
-//         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-//         aria-label="Select all"
-//       />
-//     ),
-//     cell: ({ row }) => (
-//       <Checkbox
-//         checked={row.getIsSelected()}
-//         onCheckedChange={(value) => row.toggleSelected(!!value)}
-//         aria-label="Select row"
-//       />
-//     ),
-//     enableSorting: false,
-//     enableHiding: false,
-//   },
-//   {
-//     accessorKey: "name",
-//     header: ({ column }) => (
-//       <Button
-//         variant="ghost"
-//         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-//       >
-//         Brand Name <ArrowUpDown className="ml-2 h-4 w-4" />
-//       </Button>
-//     ),
-//   },
-//   {
-//     accessorKey: "logoUrl",
-//     header: "Logo",
-//     cell: ({ row }) => {
-//       const logo = row.getValue("logoUrl") as string;
-//       return logo ? (
-//         <Image
-//           src={logo}
-//           alt="Brand Logo"
-//           width={40}
-//           height={40}
-//           className="rounded-full object-cover"
-//         />
-//       ) : (
-//         <span className="text-muted-foreground">N/A</span>
-//       );
-//     },
-//   },
-//   {
-//     accessorKey: "isFeatured",
-//     header: "Featured",
-//     cell: ({ row }) => <span>{row.getValue("isFeatured") ? "Yes" : "No"}</span>,
-//   },
-//   {
-//     accessorKey: "createdAt",
-//     header: "Created At",
-//     cell: ({ row }) => (
-//       <span>{new Date(row.getValue("createdAt")).toLocaleDateString()}</span>
-//     ),
-//   },
-//   {
-//     id: "actions",
-//     enableHiding: false,
-//     cell: ({ row }) => {
-//       const brand = row.original;
-
-//       return (
-//         <DropdownMenu>
-//           <DropdownMenuTrigger asChild>
-//             <Button variant="ghost" className="h-8 w-8 p-0">
-//               <span className="sr-only">Open menu</span>
-//               <MoreHorizontal className="h-4 w-4" />
-//             </Button>
-//           </DropdownMenuTrigger>
-//           <DropdownMenuContent align="end">
-//             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-//             <DropdownMenuItem
-//               className="text-green-600"
-//               onClick={() => onView(brand.id)}
-//             >
-//               View
-//             </DropdownMenuItem>
-//             <DropdownMenuItem
-//               className="text-blue-600"
-//               onClick={() => onEdit(brand.id)}
-//             >
-//               Edit
-//             </DropdownMenuItem>
-//             <DropdownMenuItem
-//               className="text-red-600"
-//               onClick={() => onDelete(brand.id)}
-//             >
-//               Delete
-//             </DropdownMenuItem>
-//           </DropdownMenuContent>
-//         </DropdownMenu>
-//       );
-//     },
-//   },
-// ];
 
 const ActionDropdown = ({
   brand,
   onEdit,
-  onDelete,
 }: {
   brand: Brand;
   onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -142,46 +29,25 @@ const ActionDropdown = ({
         className="h-8 w-8 p-0 hover:bg-gray-100 rounded-md flex items-center justify-center transition-colors"
       >
         <span className="sr-only">Open menu</span>
-        <MoreHorizontal className="h-4 w-4" />
+        <button
+          onClick={() => {
+            onEdit(brand.id);
+            setIsOpen(false);
+          }}
+          className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors curosr-pointer"
+        >
+          <Edit />
+        </button>
       </button>
-
-      {isOpen && (
-        <div className="absolute right-0 top-8 z-50 min-w-[160px] bg-white rounded-md shadow-lg border border-gray-200 py-1">
-          <button
-            onClick={() => {
-              onEdit(brand);
-              setIsOpen(false);
-            }}
-            className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            Edit Brand
-          </button>
-          <button
-            onClick={() => {
-              onDelete(brand);
-              setIsOpen(false);
-            }}
-            className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 transition-colors"
-          >
-            Delete Brand
-          </button>
-        </div>
-      )}
-
-      {isOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-      )}
     </div>
   );
 };
 
 export const getBrandColumns = ({
   onEdit,
-  onDelete,
 }: {
   onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
-}) => [
+}): ColumnDef<Brand>[] => [
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -263,9 +129,7 @@ export const getBrandColumns = ({
     enableHiding: false,
     cell: ({ row }) => {
       const brand = row.original;
-      return (
-        <ActionDropdown brand={brand} onEdit={onEdit} onDelete={onDelete} />
-      );
+      return <ActionDropdown brand={brand} onEdit={onEdit} />;
     },
   },
 ];

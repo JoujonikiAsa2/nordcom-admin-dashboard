@@ -1,18 +1,21 @@
 "use server";
 
+import { cookies } from "next/headers";
+import { jwtDecode } from "jwt-decode";
 const url = process.env.NEXT_PUBLIC_API_URL;
-const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTnVzcmF0IEphaGFuIFN1c2htaXRhIiwiZW1haWwiOiJudXNpZUBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDg1NzQzMzQsImV4cCI6MTc0ODY2MDczNH0.5OSyyVqQDRj6NYlo1jqWLj78D0e5XFBGE0FbnvG68xw`;
+export const getTokenFromCookies = async () => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value as string;
+  return token;
+};
 export const getAllUsers = async () => {
   try {
-    console.log("get all users");
-    console.log("urllllllllllll", url);
     const res = await fetch(`${url}/user`, {
       headers: {
-        Authorization: token,
+        Authorization: await getTokenFromCookies(),
       },
     });
     const result = await res.json();
-    // console.log("user from server", result);
     return result.data;
   } catch (error: unknown) {
     throw new Error("Failed to fetch users", error as Error);
@@ -20,12 +23,11 @@ export const getAllUsers = async () => {
 };
 
 export const updateUserStatus = async (id: string, status: string) => {
-  console.log("id", id, "status", status);
   try {
     const res = await fetch(`${url}/admin/${id}?status=${status}`, {
       method: "PATCH",
       headers: {
-        Authorization: token,
+        Authorization: await getTokenFromCookies(),
       },
     });
     const result = await res.json();
@@ -33,4 +35,13 @@ export const updateUserStatus = async (id: string, status: string) => {
   } catch (error: unknown) {
     throw new Error("Failed to update status", error as Error);
   }
+};
+
+export const decodedUserInfoFromToken = async () => {
+  const token = await getTokenFromCookies();
+  console.log("token", token);
+  if (!token) return null;
+  const decodedToken = jwtDecode(token);
+  console.log("decoded token", decodedToken);
+  return decodedToken;
 };

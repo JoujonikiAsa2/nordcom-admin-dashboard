@@ -1,6 +1,6 @@
 "use client";
 import { getAllUsers, updateUserStatus } from "@/services/user";
-import { getUserColumns, mockUsers, User } from "@/types/user";
+import { getUserColumns, User } from "@/types/user";
 import {
   ColumnFiltersState,
   flexRender,

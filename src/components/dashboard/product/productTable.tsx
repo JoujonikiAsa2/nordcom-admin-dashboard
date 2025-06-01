@@ -71,7 +71,7 @@ const ProductsTable = () => {
   });
 
   return (
-    <div className="w-full bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+    <div className="w-full  bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
       {/* Enhanced Header Section */}
       <div className=" p-6 text-black">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">

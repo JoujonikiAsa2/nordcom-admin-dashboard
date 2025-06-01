@@ -24,10 +24,8 @@ export type Category = {
 
 export const getCategoryColumns = ({
   onEdit,
-  onDelete,
 }: {
-  onEdit: (category: Category) => void;
-  onDelete: (category: Category) => void;
+  onEdit: (id: string) => void;
 }): ColumnDef<Category>[] => [
   {
     accessorKey: "name",
@@ -77,11 +75,8 @@ export const getCategoryColumns = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => onEdit(category)}>
+            <DropdownMenuItem onClick={() => onEdit(category.id)}>
               Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onDelete(category)}>
-              Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

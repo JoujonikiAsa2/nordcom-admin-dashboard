@@ -12,7 +12,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronDown } from "lucide-react";
-import { columns, Category, getCategoryColumns } from "@/types/category/index";
+import { Category, getCategoryColumns } from "@/types/category/index";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -30,33 +30,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getAllCategories } from "@/services/category";
-
-const mockCategories: Category[] = [
-  {
-    id: "1",
-    name: "Electronics",
-    slug: "electronics",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "2",
-    name: "Smartphones",
-    slug: "smartphones",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "3",
-    name: "Laptops",
-    slug: "laptops",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "4",
-    name: "Home Appliances",
-    slug: "home-appliances",
-    createdAt: new Date().toISOString(),
-  },
-];
+import { useRouter } from "next/navigation";
 
 const CategoryTable = () => {
   const [loading, setLoading] = React.useState(false);
@@ -65,6 +39,7 @@ const CategoryTable = () => {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const router = useRouter();
   React.useEffect(() => {
     const fetchCategories = async () => {
       const res = await getAllCategories();
@@ -79,21 +54,15 @@ const CategoryTable = () => {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const handleEdit = (category: Category) => {
-    // router.push(`/dashboard/categories/edit/${category.id}`);
+  const handleEdit = (id: string) => {
+    router.push(`/dashboard/admin/edit/category/${id}`);
 
-    console.log(category);
-  };
-
-  const handleDelete = (category: Category) => {
-    // router.push(`/dashboard/categories/delete/${category.id}`)
-    // ;
-    console.log(category);
+    // console.log(category);
   };
 
   const table = useReactTable({
     data: categories,
-    columns: getCategoryColumns({ onEdit: handleEdit, onDelete: handleDelete }),
+    columns: getCategoryColumns({ onEdit: handleEdit }),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),

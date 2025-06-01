@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,27 +7,40 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { CategoryFormData } from "@/types/category";
 import { toast } from "sonner";
-import { createCategory } from "@/services/category";
-const CategoryForm = ({
-  setActiveTab,
-}: {
-  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+import { getSingleCategory, udpateCategory } from "@/services/category";
+import { useParams } from "next/navigation";
+
+const EditCategoryForm = () => {
+  const [loading, setLoading] = useState(false);
   const [categoryForm, setCategoryForm] = useState<CategoryFormData>({
     name: "",
     slug: "",
     parentId: "",
   });
-  const handleCategorySubmit = async () => {
-    const toastId = toast.loading("Creating category...");
+  const { id } = useParams();
+  useEffect(() => {
+    const fetchCategoryToEdit = async () => {
+      const res = await getSingleCategory(id as string);
+      setCategoryForm((prev) => ({
+        ...prev,
+        name: res.name,
+        slug: res.slug,
+        parentId: res.parentId,
+      }));
+      setLoading(false);
+    };
+    fetchCategoryToEdit();
+  }, [loading, id]);
 
-    const res = await createCategory({
+  const handleCategorySubmit = async () => {
+    const toastId = toast.loading("Updating category...");
+
+    const res = await udpateCategory(id as string, {
       name: categoryForm.name,
       slug: categoryForm.slug,
     });
     if (res.success) {
       toast.success(res.message, { id: toastId });
-      setActiveTab("all-category");
     } else {
       toast.error(res.message, { id: toastId });
     }
@@ -84,7 +97,7 @@ const CategoryForm = ({
                 onClick={handleCategorySubmit}
                 className="bg-orange-600 hover:bg-orange-700 "
               >
-                Create Category
+                Update Category
               </Button>
             </div>
           </div>
@@ -94,4 +107,4 @@ const CategoryForm = ({
   );
 };
 
-export default CategoryForm;
+export default EditCategoryForm;
