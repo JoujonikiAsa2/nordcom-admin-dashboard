@@ -19,7 +19,6 @@ export type Category = {
   id: string;
   name: string;
   slug?: string;
-  createdAt: string;
 };
 
 export const getCategoryColumns = ({
@@ -41,24 +40,6 @@ export const getCategoryColumns = ({
   {
     accessorKey: "slug",
     header: "Slug",
-  },
-
-  {
-    accessorKey: "createdAt",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Created At <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) =>
-      new Date(row.original.createdAt).toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      }),
   },
   {
     id: "actions",

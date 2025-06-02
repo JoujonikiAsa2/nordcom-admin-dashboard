@@ -4,6 +4,7 @@ import getTokenFromCookies from "@/utils/getTokenFromCookies";
 import { cookies } from "next/headers";
 
 const url = process.env.NEXT_PUBLIC_API_URL;
+console.log(url)
 
 export const login = async (email: string, password: string) => {
   const res = await fetch(`${url}/auth/login`, {

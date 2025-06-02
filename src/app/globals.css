@@ -4,6 +4,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+
 :root {
   --background: #000000;
   --primary: #8D59F8;
@@ -121,6 +122,11 @@ body {
   --color-sidebar-ring: var(--sidebar-ring);
   --color-regal-blue: var(--regal-blue); 
 }
+
+canvas {
+  pointer-events: none;
+}
+
 
 .dark-background {
   background-color: #0F0715;

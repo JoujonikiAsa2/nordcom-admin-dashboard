@@ -96,7 +96,7 @@ export const getProductColumns = ({
           <div className="flex-shrink-0">
             {product.images[0] ? (
               <Image
-                src={product.images[0]}
+                src={product.images[product?.images?.length-1]}
                 alt={product.name}
                 className="h-12 w-12 rounded-lg object-cover"
                 width={48}

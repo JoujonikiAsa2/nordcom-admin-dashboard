@@ -194,7 +194,6 @@ export default function OrderTable() {
                       <td
                         colSpan={
                           getOrderColumns({
-                            onViewDetails: handleViewDetails,
                             onStatusChange: handleStatusChange,
                           }).length
                         }

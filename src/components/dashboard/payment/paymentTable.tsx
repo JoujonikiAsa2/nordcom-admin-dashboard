@@ -11,17 +11,35 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronDown, CreditCard } from "lucide-react";
-import { getPaymentColumns, mockPayments } from "@/types/payment";
+import { getPaymentColumns, mockPayments, Payment } from "@/types/payment";
+import { getAllPayments } from "@/services/payment";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+
 export default function PaymentTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [payments, setPayments] = React.useState<Payment[]>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  React.useEffect(() => {
+    const fetchPayment = async () => {
+      const res = await getAllPayments();
+      if (res.length > 0) setPayments(res);
+    };
+    fetchPayment();
+  }, []);
+
   const table = useReactTable({
-    data: mockPayments,
+    data: payments,
     columns: getPaymentColumns(),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -72,10 +90,30 @@ export default function PaymentTable() {
               />
             </div>
             <div className="relative">
-              <button className="ml-auto border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50 flex items-center space-x-2 transition-colors">
-                <span>Columns</span>
-                <ChevronDown className="h-4 w-4" />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="ml-auto">
+                    Columns <ChevronDown />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {table
+                    .getAllColumns()
+                    .filter((column) => column.getCanHide())
+                    .map((column) => (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 

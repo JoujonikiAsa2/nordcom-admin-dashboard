@@ -26,8 +26,6 @@ export interface Payment {
   status: "UNPAID" | "PAID" | "FAILED";
   transactionId?: string | null;
   paidAt?: string | null;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export const getPaymentColumns = (): ColumnDef<Payment>[] => [
@@ -186,8 +184,6 @@ export const mockPayments: Payment[] = [
     status: "PAID",
     transactionId: "txn_abc123",
     paidAt: new Date("2024-03-20T10:30:00").toISOString(),
-    createdAt: new Date("2024-03-20T10:25:00").toISOString(),
-    updatedAt: new Date("2024-03-20T10:30:00").toISOString(),
   },
   {
     id: "pay_2",
@@ -197,8 +193,6 @@ export const mockPayments: Payment[] = [
     status: "PAID",
     transactionId: "txn_def456",
     paidAt: new Date("2024-03-19T14:20:00").toISOString(),
-    createdAt: new Date("2024-03-19T14:15:00").toISOString(),
-    updatedAt: new Date("2024-03-19T14:20:00").toISOString(),
   },
   {
     id: "pay_3",
@@ -208,8 +202,6 @@ export const mockPayments: Payment[] = [
     status: "UNPAID",
     transactionId: null,
     paidAt: null,
-    createdAt: new Date("2024-03-18T09:15:00").toISOString(),
-    updatedAt: new Date("2024-03-18T09:15:00").toISOString(),
   },
   {
     id: "pay_4",
@@ -219,8 +211,6 @@ export const mockPayments: Payment[] = [
     status: "FAILED",
     transactionId: "txn_ghi789",
     paidAt: null,
-    createdAt: new Date("2024-03-17T16:45:00").toISOString(),
-    updatedAt: new Date("2024-03-17T16:50:00").toISOString(),
   },
   {
     id: "pay_5",
@@ -230,7 +220,5 @@ export const mockPayments: Payment[] = [
     status: "PAID",
     transactionId: "txn_jkl012",
     paidAt: new Date("2024-03-16T11:30:00").toISOString(),
-    createdAt: new Date("2024-03-16T11:25:00").toISOString(),
-    updatedAt: new Date("2024-03-16T11:30:00").toISOString(),
   },
 ];

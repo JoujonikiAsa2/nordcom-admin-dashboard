@@ -4,6 +4,7 @@ import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { login } from "@/services/auth";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,20 +12,33 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     // Simulate login process
     const res = await login(email, password);
-    console.log(res);
     if (res.success) {
       setIsLoading(false);
+      toast.success(res.message);
       router.push(res.data.redirectUrl);
     } else {
       toast.error(res.message);
       setIsLoading(false);
     }
+  };
 
+  const handleOnClickLogin = async (email: string, password: string) => {
+    setIsLoading(true);
+    const res = await login(email, password);
+    if (res.success) {
+      setIsLoading(false);
+      toast.success(res.message);
+      router.push(res.data.redirectUrl);
+    } else {
+      toast.error(res.message);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -55,9 +69,18 @@ export default function AdminLogin() {
           {/* Form */}
           <div className="px-8 py-8">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">
                 Welcome back
               </h2>
+              <div className="pb-4 flex items-center justify-center">
+                <Button
+                  onClick={() =>
+                    handleOnClickLogin("joujoniki@gmail.com", "111111")
+                  }
+                >
+                  Login as Admin
+                </Button>
+              </div>
               <p className="text-gray-600">
                 Sign in to access your admin dashboard
               </p>
